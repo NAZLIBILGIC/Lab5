@@ -1,5 +1,5 @@
 # Install and load necessary packages
-# install.packages("httr")
+#install.packages("httr")
 library(httr)
 library(jsonlite)
 
@@ -53,7 +53,7 @@ find_busiest_and_least_busy_stations <- function(city_info) {
 }
 
 # Iterate through the cities and determine busiest and least busy stations
-for (city_id in c("malmobybike", "styr-staell-goeteborg", "lundahoj")) {
+for (city_id in c("malmobybike", "lundahoj")) {
   city_info <- network_info_list[[city_id]]
   if (!is.null(city_info)) {
     results <- find_busiest_and_least_busy_stations(city_info)
