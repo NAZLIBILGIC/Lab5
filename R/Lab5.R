@@ -38,7 +38,7 @@ for (network_id in network_ids) {
   }
 }
 
-find_busiest_and_least_busy_stations <- function(city_info) {
+bikeStationStatu<- function(city_info) {
   stations <- city_info$network$stations
 
   # Sort stations by bike availability
@@ -56,7 +56,8 @@ find_busiest_and_least_busy_stations <- function(city_info) {
 for (city_id in c("malmobybike", "lundahoj")) {
   city_info <- network_info_list[[city_id]]
   if (!is.null(city_info)) {
-    results <- find_busiest_and_least_busy_stations(city_info)
+    results <- bikeStationStatu(city_info)
+
     cat("City:", city_id, "\n")
 
     busiest_station <- results$busiest
@@ -77,7 +78,6 @@ for (city_id in c("malmobybike", "lundahoj")) {
     cat("No detailed information available for", city_id, "\n")
   }
 }
-
 
 
 
