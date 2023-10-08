@@ -2,6 +2,7 @@
 #install.packages("httr")
 library(httr)
 library(jsonlite)
+library(testthat)
 
 
 api_url <- "http://api.citybik.es/v2/networks"
