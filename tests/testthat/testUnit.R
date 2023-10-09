@@ -31,3 +31,4 @@ test_that("bikeStationStatu functionality", {
   expect_equal(results$least_busy$free_bikes, 5)
 
 })
+
