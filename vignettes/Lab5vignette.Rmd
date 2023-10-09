@@ -1,0 +1,70 @@
+---
+title: "Lab5vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Lab5vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(Lab5)
+```
+
+#Introduction
+
+This vignette provides documentation regarding how to use the `bikeStationStatus` function and "bikeStationStatu" function to retrieve bike station status information for multiple network IDs and provides information about the busiest and the least busy city bike station in a selected city. Furthermore, there is a shiny app created which is interactive with the user. The user picks a city and then automatically the results appear on the screen.
+
+
+
+#Installation and usage
+
+To use the package Lab5 , first, make sure you have the required libraries installed.
+
+```{r}
+# Install and load the required packages-libraries.
+install.packages("shiny")
+library(shiny)
+install.packages("httr")
+library(httr)
+install.packages("jsonlite")
+library(jsonlite)
+
+```
+
+
+
+#To decide the busiest and least busy station
+```{r}
+sample_city_info <- list(
+    network = list(
+      stations = data.frame(
+        name = c("Station A", "Station B"),
+        free_bikes = c(10, 5),
+        extra = list(address = c("Address A", "Address B")),
+        empty_slots=c(5,10))))
+```
+
+
+
+#To retrieve city bike station status information
+```{r}
+bikeStationStatu(sample_city_info)
+```
+
+
+
+
+
+
+
+
+
+
