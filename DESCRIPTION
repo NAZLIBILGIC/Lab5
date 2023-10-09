@@ -13,5 +13,5 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports:
- httr
- jsonlite
+  httr (>= 1.4.2),
+  jsonlite (>= 1.7.3)
