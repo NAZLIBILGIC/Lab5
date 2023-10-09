@@ -1,8 +1,9 @@
-source('Lab5.R')
+#source('Lab5.R')
+library(testthat)
 
 
 #Function check
-test_that("bikeStationStatu functionality", {
+test_that("bikeStationStatus functionality", {
   # Create a sample city_info object
   sample_city_info <- list(
     network = list(
@@ -15,7 +16,7 @@ test_that("bikeStationStatu functionality", {
     )
   )
 
-  results <- bikeStationStatu(sample_city_info)
+  results <- bikeStationStatus(sample_city_info)
 
   # Test that the function returns a list
   expect_is(results, "list")
