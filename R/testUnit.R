@@ -1,5 +1,5 @@
-#Function check
-test_that("bikeStationStatus functionality", {
+# Function check
+test_that("bikeStationStatu functionality", {
   # Create a sample city_info object
   sample_city_info <- list(
     network = list(
@@ -12,7 +12,7 @@ test_that("bikeStationStatus functionality", {
     )
   )
 
-  results <- bikeStationStatus(sample_city_info)
+  results <- bikeStationStatu(sample_city_info)
 
   # Test that the function returns a list
   expect_is(results, "list")
