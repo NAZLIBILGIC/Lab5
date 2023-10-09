@@ -15,7 +15,7 @@
 #'
 #'@export
 bikeStationStatus <- function(network_ids) {
-  api_url <- "http://api.citybik.es/v2/networks"
+  api_url <- "http://api.citybik.es/v2/networks/"
   response <- GET(api_url)
   http_status <- status_code(response)
   api_data <- content(response, "text")
