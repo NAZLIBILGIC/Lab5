@@ -27,5 +27,6 @@ test_that("bikeStationStatu functionality", {
   #least busy check
   expect_equal(results$least_busy$name, "Station B")
   expect_equal(results$least_busy$empty_slots, 10)
+  expect_equal(results$least_busy$free_bikes, 5)
 
 })
