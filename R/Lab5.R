@@ -4,7 +4,6 @@
 #'
 #'@importFrom jsonlite fromJSON
 #'
-#'@importFrom test that
 #'
 #'@param network_ids A character vector of network IDs.
 #'
@@ -38,8 +37,6 @@ bikeStationStatus <- function(network_ids) {
 #'@importFrom httr GET
 #'
 #'@importFrom jsonlite fromJSON
-#'
-#'@importFrom test that
 #'
 #'@param city_info The network information for a city.
 #'
