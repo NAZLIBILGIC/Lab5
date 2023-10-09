@@ -1,5 +1,5 @@
 source('Lab5.R')
-library(testthat)
+
 
 #Function check
 test_that("bikeStationStatu functionality", {
