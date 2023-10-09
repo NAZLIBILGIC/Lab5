@@ -14,6 +14,8 @@
 #'@return A list containing the bike station status for the specified network IDs.
 #'
 #'@export
+library(httr)
+library(jsonlite)
 bikeStationStatus <- function(network_ids) {
   api_url <- "http://api.citybik.es/v2/networks/"
   response <- GET(api_url)
