@@ -1,7 +1,7 @@
 # Install and load necessary packages
 #install.packages("httr")
-library(httr)
-library(jsonlite)
+#library(httr)
+#library(jsonlite)
 
 bikeStationStatus <- function(network_ids) {
   api_url <- "http://api.citybik.es/v2/networks"
