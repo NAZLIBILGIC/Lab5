@@ -2,67 +2,61 @@
 #install.packages("httr")
 library(httr)
 library(jsonlite)
-library(testthat)
 
+bikeStationStatus <- function(network_ids) {
+  api_url <- "http://api.citybik.es/v2/networks"
+  response <- GET(api_url)
+  http_status <- status_code(response)
+  api_data <- content(response, "text")
+  parsed_data <- fromJSON(api_data)
+  network_info_list <- list()
 
-api_url <- "http://api.citybik.es/v2/networks"
+  for (network_id in network_ids) {
+    network_url <- paste0(api_url, "/", network_id)
+    network_response <- GET(network_url)
+    network_data <- content(network_response, "text")
+    network_info <- fromJSON(network_data)
+    if (!is.null(network_info)) {
+      network_info_list[[network_id]] <- network_info
+    }
+  }
 
-response <- GET(api_url)
+  bikeStationStatu <- function(city_info) {
+    stations <- city_info$network$stations
+    stations_sorted <- stations[order(-stations$free_bikes), ]
+    busiest_station <- stations_sorted[1, ]
+    least_busy_station <- stations_sorted[nrow(stations_sorted), ]
+    return(list(busiest = busiest_station, least_busy = least_busy_station))
+  }
 
-http_status <- status_code(response)
-#print(http_status)
-api_data <- content(response, "text")
+  results_list <- list()
 
-# Parse the JSON data
-parsed_data <- fromJSON(api_data)
+  for (network_id in network_ids) {
+    city_info <- network_info_list[[network_id]]
+    if (!is.null(city_info)) {
+      results <- bikeStationStatu(city_info)
+      results_list[[network_id]] <- results
+    } else {
+      results_list[[network_id]] <- NULL
+    }
+  }
 
-# List of network IDs to retrieve detailed information for
+  return(results_list)
+}
+
+# Specify the network IDs you want to retrieve detailed information for
 network_ids <- c("malmobybike", "lundahoj")
-network_info_list <- list()
 
+# Call the function to get the results
+results <- bikeStationStatus(network_ids)
+
+# Print the results
 for (network_id in network_ids) {
-  network_url <- paste0(api_url, "/", network_id)
-  network_response <- GET(network_url)
-  network_data <- content(network_response, "text")
-  network_info <- fromJSON(network_data)
-  if (!is.null(network_info)) {
-    network_info_list[[network_id]] <- network_info
-  }
-}
+  if (!is.null(results[[network_id]])) {
+    cat("City:", network_id, "\n")
 
-for (network_id in network_ids) {
-  if (network_id %in% names(network_info_list)) {
-    print(paste("Detailed information for", network_id, ":"))
-    print(network_info_list[[network_id]])
-  } else {
-    print(paste("No detailed information available for", network_id))
-  }
-}
-
-bikeStationStatu<- function(city_info) {
-  stations <- city_info$network$stations
-
-  # Sort stations by bike availability
-  stations_sorted <- stations[order(-stations$free_bikes), ]
-
-  # busiest and least busy stations
-  busiest_station <- stations_sorted[1, ]
-  least_busy_station <- stations_sorted[nrow(stations_sorted), ]
-
-  # Return the results
-  return(list(busiest = busiest_station, least_busy = least_busy_station))
-}
-
-# Iterate through the cities and determine busiest and least busy stations
-for (city_id in c("malmobybike", "lundahoj")) {
-  city_info <- network_info_list[[city_id]]
-  if (!is.null(city_info)) {
-    results <- bikeStationStatu(city_info)
-
-    cat("City:", city_id, "\n")
-
-    busiest_station <- results$busiest
-    least_busy_station <- results$least_busy
+    busiest_station <- results[[network_id]]$busiest
+    least_busy_station <- results[[network_id]]$least_busy
 
     cat("Busiest Station Details:\n")
     cat("Name: ", busiest_station$name, "\n")
@@ -76,9 +70,6 @@ for (city_id in c("malmobybike", "lundahoj")) {
 
     cat("\n")
   } else {
-    cat("No detailed information available for", city_id, "\n")
+    cat("No detailed information available for", network_id, "\n")
   }
 }
-
-
-
