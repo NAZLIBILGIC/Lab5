@@ -1,7 +1,5 @@
-source('Lab5.R')
-
 #Function check
-test_that("bikeStationStatu functionality", {
+test_that("bikeStationStatus functionality", {
   # Create a sample city_info object
   sample_city_info <- list(
     network = list(
@@ -14,7 +12,7 @@ test_that("bikeStationStatu functionality", {
     )
   )
 
-  results <- bikeStationStatu(sample_city_info)
+  results <- bikeStationStatus(sample_city_info)
 
   # Test that the function returns a list
   expect_is(results, "list")
@@ -24,8 +22,8 @@ test_that("bikeStationStatu functionality", {
   expect_equal(results$busiest$empty_slots, 5)
   expect_equal(results$busiest$free_bikes, 10)
 
-  #least busy check
+  # Least busy check
   expect_equal(results$least_busy$name, "Station B")
   expect_equal(results$least_busy$empty_slots, 10)
-
+  expect_equal(results$least_busy$free_bikes, 5)
 })
