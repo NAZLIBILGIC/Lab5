@@ -1,9 +1,19 @@
-install.packages("httr")  # Uncomment this line to install httr package
-library(httr)  # Uncomment this line to load the httr package
-library(jsonlite)
-library(testthat)
-
-
+#'Get the bike station status for multiple network ids.
+#'
+#'@importFrom httr
+#'
+#'@importFrom jsonlite
+#'
+#'@importFrom testthat
+#'
+#'@param network_ids A character vector of network IDs.
+#'
+#'@description
+#'This function retrieves bike station status for a list of network IDs.
+#'
+#'@return A list containing the bike station status for the specified network IDs.
+#'
+#'@export
 bikeStationStatus <- function(network_ids) {
   api_url <- "http://api.citybik.es/v2/networks"
   response <- GET(api_url)
@@ -21,8 +31,23 @@ bikeStationStatus <- function(network_ids) {
       network_info_list[[network_id]] <- network_info
     }
   }
-
-  bikeStationStatu <- function(city_info) {
+#'Get information about the busiest and the least busy city bike station in a city
+#'
+#'@importFrom httr
+#'
+#'@importFrom jsonlite
+#'
+#'@importFrom testthat
+#'
+#'@param city_info The network information for a city.
+#'
+#'@description
+#'This function takes the network information for a city and returns details about the busiest and the least busiest station of the city bikes in the selected city.
+#'
+#'@return A list containing the busiest and the least busy city bike station details.
+#'
+#'@export
+bikeStationStatu <- function(city_info) {
     stations <- city_info$network$stations
     stations_sorted <- stations[order(-stations$free_bikes), ]
     busiest_station <- stations_sorted[1, ]
