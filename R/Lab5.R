@@ -1,10 +1,10 @@
 #'Get the bike station status for multiple network ids.
 #'
-#'@importFrom httr
+#'@importFrom httr GET
 #'
-#'@importFrom jsonlite
+#'@importFrom jsonlite fromJSON
 #'
-#'@importFrom testthat
+#'@importFrom test that
 #'
 #'@param network_ids A character vector of network IDs.
 #'
@@ -35,11 +35,11 @@ bikeStationStatus <- function(network_ids) {
   }
 #'Get information about the busiest and the least busy city bike station in a city
 #'
-#'@importFrom httr
+#'@importFrom httr GET
 #'
-#'@importFrom jsonlite
+#'@importFrom jsonlite fromJSON
 #'
-#'@importFrom testthat
+#'@importFrom test that
 #'
 #'@param city_info The network information for a city.
 #'

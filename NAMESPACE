@@ -2,3 +2,6 @@
 
 export()
 export(bikeStationStatus)
+importFrom(httr,GET)
+importFrom(jsonlite,fromJSON)
+importFrom(test,that)
