@@ -9,7 +9,6 @@ library(jsonlite)
 #'@param city_info The network information for a city.
 #'
 #'@description
-#'This function takes the network information for a city and returns details about the busiest and the least busiest station of the city bikes in the selected city.
 #'
 #'@return A list containing the busiest and the least busy city bike station details.
 #'
@@ -21,7 +20,6 @@ city_api_urls <- c(
   "http://api.citybik.es/v2/networks/malmobybike"
 )
 
-# list creation for storing the results for both the busiest and least busy stations
 city_results <- list()
 
 for (api_url in city_api_urls) {
