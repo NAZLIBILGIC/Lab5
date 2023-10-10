@@ -86,3 +86,7 @@ for (city_id in names(city_results)) {
   cat("Address: ", results$least_busy$extra$address, "\n")
   cat("Free Bikes: ", results$least_busy$free_bikes, "\n")
 }
+
+
+
+
