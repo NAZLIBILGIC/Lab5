@@ -30,12 +30,12 @@ To use the package Lab5 , first, make sure you have the required libraries insta
 
 ```{r}
 # Install and load the required packages-libraries.
-install.packages("shiny")
-library(shiny)
-install.packages("httr")
-library(httr)
-install.packages("jsonlite")
-library(jsonlite)
+#install.packages("shiny")
+#library(shiny)
+#install.packages("httr")
+#library(httr)
+#install.packages("jsonlite")
+#library(jsonlite)
 
 ```
 
@@ -56,7 +56,7 @@ sample_city_info <- list(
 
 #To retrieve city bike station status information
 ```{r}
-bikeStationStatu(sample_city_info)
+findBusiestStationsFromData(sample_city_info)
 ```
 
 
