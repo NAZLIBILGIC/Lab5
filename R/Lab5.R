@@ -8,6 +8,8 @@ library(jsonlite)
 #'
 #'@param city_info The network information for a city.
 #'
+#'@param city_id The city ID's.
+#'
 #'@description
 #'
 #'@return A list containing the busiest and the least busy city bike station details.

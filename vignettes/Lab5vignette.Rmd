@@ -69,7 +69,7 @@ Reading JSON data from local files
 lundahoj_data <- jsonlite::fromJSON("lundahoj_data.json")
 malmobybike_data <- jsonlite::fromJSON("malmobybike_data.json")
 data<-c(lundahoj_data,malmobybike_data)
-city_id<-c(lundahoj_data,malmobybike_data)
+city_id<-c("lundahoj","malmobybike")
 ```
 
 
