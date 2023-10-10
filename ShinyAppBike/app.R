@@ -8,84 +8,81 @@ library(jsonlite)
 
 
 
-# Define UI for application
-ui <- fluidPage(
 
-  # Application title
-  titlePanel("City Bike Information"),
+if (!("Lab5" %in% installed.packages()[, "Package"])) {
+  devtools::install_github("NAZLIBILGIC/Lab5")
+  library("Lab5")
+}
+
+source("RScripts/Lab5.R")
+
+# Define UI for application
+ui <- fluidPage(# Application title
+  titlePanel("City Bike Station Status"),
 
   # Sidebar with a slider input
   sidebarLayout(
     sidebarPanel(
-      selectInput("city_id", "Select City:",
-                  choices = c("malmobybike", "lundahoj"),
-                  selected = "malmobybike"
-      ),
-      actionButton("get_info_button", "Get Information")),
+      selectInput("city", "Select City:",
+                  choices = c("Lundahoj", "Malmobybike")),
+      actionButton("get_info", "Get Information")
+    ),
     # Show a plot of the generated distribution
-    mainPanel(
-      textOutput("busiest_station_info"),
-      textOutput("least_busy_station_info")
-    )
-  )
-)
+    mainPanel(textOutput("city_info"))
+  ))
 
-# Define server logic required to draw a histogram
 server <- function(input, output) {
-  network_info_list <- reactive({
-    # Fetch and parse data from the city bike network API
-    api_url <- "http://api.citybik.es/v2/networks"
-    response <- httr::GET(api_url)
-    api_data <- httr::content(response, "text")
-    parsed_data <- jsonlite::fromJSON(api_data)
+  observeEvent(input$get_info, {
+    city_url <- switch(input$city,
+                       "Lundahoj" = "http://api.citybik.es/v2/networks/lundahoj",
+                       "Malmobybike" = "http://api.citybik.es/v2/networks/malmobybike")
 
-    # List of network IDs to retrieve detailed information for
-    network_ids <- c("malmobybike", "lundahoj")
-    network_info_list <- list()
+    # Fetch data from the API
+    response <- GET(city_url)
+    api_data <- content(response, "text")
 
-    for (network_id in network_ids) {
-      network_url <- paste0(api_url, "/", network_id)
-      network_response <- httr::GET(network_url)
-      network_data <- httr::content(network_response, "text")
-      network_info <- jsonlite::fromJSON(network_data)
-      if (!is.null(network_info)) {
-        network_info_list[[network_id]] <- network_info
-      }
-    }
-    return(network_info_list)
-  })
-  observeEvent(input$get_info_button, {
-    city_id <- input$city_id
-    city_info <- network_info_list()[[city_id]]
+    # Save the bike data to a JSON file
+    city_id <- basename(city_url)
 
-    if (!is.null(city_info)) {
-      results <- find_busiest_and_least_busy_stations(city_info)
+    writeLines(api_data, paste0(city_id, "_data.json"))
 
-      busiest_station <- results$busiest
-      least_busy_station <- results$least_busy
+    # Load the data from the JSON file
+    city_data <- readLines(paste0(city_id, "_data.json"))
 
-      busiest_text <- paste(
-        "Busiest Station Details:",
-        "Name:", busiest_station$name,
-        "Address:", busiest_station$extra$address,
-        "Empty Slots:", busiest_station$empty_slots
+    # Get busy and least busy station
+    results <- findBusiestStationsFromData(city_data, city_id)
+
+    output$city_info <- renderText({
+      paste(
+        "City:",
+        input$city,
+        "\n",
+        "Busiest Station Details:\n",
+        "Name: ",
+        results$busiest$name,
+        "\n",
+        "Address: ",
+        results$busiest$extra$address,
+        "\n",
+        "Free Bikes: ",
+        results$busiest$free_bikes,
+        "\n",
+        "Least Busy Station Details:\n",
+        "Name: ",
+        results$least_busy$name,
+        "\n",
+        "Address: ",
+        results$least_busy$extra$address,
+        "\n",
+        "Free Bikes: ",
+        results$least_busy$free_bikes,
+        "\n"
       )
-
-      least_busy_text <- paste(
-        "Least Busy Station Details:",
-        "Name:", least_busy_station$name,
-        "Address:", least_busy_station$extra$address,
-        "Empty Slots:", least_busy_station$empty_slots
-      )
-
-      output$busiest_station_info <- renderText(busiest_text)
-      output$least_busy_station_info <- renderText(least_busy_text)
-    } else {
-      output$busiest_station_info <- renderText("No detailed information available for this city.")
-      output$least_busy_station_info <- renderText(NULL)
-    }
+    })
   })
-
 }
+
+
+
 # Run the application
 shinyApp(ui = ui, server = server)
