@@ -6,11 +6,16 @@ library(jsonlite)
 #'
 #'@importFrom jsonlite fromJSON
 #'
+#'@description takin the information from city bikes API. With the information we get two
+#'cities and find the least busy and busy stations. Show them to the user.
+#'
 #'@param city_info The network information for a city.
 #'
 #'@param city_id The city ID's.
 #'
-#'@description
+#'@param city_data Data of the cities with station, free bike and address infornation.
+#'
+#'
 #'
 #'@return A list containing the busiest and the least busy city bike station details.
 #'
