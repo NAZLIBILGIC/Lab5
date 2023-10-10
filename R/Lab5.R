@@ -32,7 +32,7 @@ for (api_url in city_api_urls) {
   writeLines(api_data, paste0(city_id, "_data.json"))
 
   findBusiestStationsFromData <- function(city_data, city_id) {
-    city_info <- fromJSON(city_data)
+    city_info <- jsonlite::fromJSON(city_data)
 
     stations <- city_info$network$stations
     stations_sorted <- stations[order(-stations$free_bikes), ]
