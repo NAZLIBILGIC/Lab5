@@ -108,6 +108,7 @@ for (city_id in names(city_results)) {
 ```
 
 
-
-
+#Shiny App
+There is a shiny app provided in the package in which the user selects a city and then gets automatically information about the most and least busy city bike stations there. The station name , the address of the location and the amount of free bikes available are given.
+It can be opened: shiny::runGitHub('NAZLIBILGIC/lab5', subdir = "ShinyAppBike")
 
