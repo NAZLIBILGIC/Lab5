@@ -21,6 +21,7 @@ To install the Lab5 package , you need to source it from Github: devtools::insta
 ```{r setup}
 library("Lab5")
 library(jsonlite)
+library(httr)
 ```
 
 
@@ -77,6 +78,8 @@ data<-c(lundahoj_data,malmobybike_data)
 To retrieve city bike station status information for Malmo:
 ```{r}
 findBusiestStationsFromData(city_data = "malmobybike_data.json", malmobybike)
+#results <- findBusiestStationsFromData(city_data = "malmobybike_data.json", malmobybike")
+
 ```
 
 
