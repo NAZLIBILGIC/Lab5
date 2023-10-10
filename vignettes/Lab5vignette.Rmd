@@ -20,6 +20,7 @@ To install the Lab5 package , you need to source it from Github: devtools::insta
 
 ```{r setup}
 library("Lab5")
+library(jsonlite)
 ```
 
 
