@@ -14,7 +14,6 @@ if (!("Lab5" %in% installed.packages()[, "Package"])) {
   library("Lab5")
 }
 
-source("RScripts/Lab5.R")
 
 # Define UI for application
 ui <- fluidPage(# Application title
