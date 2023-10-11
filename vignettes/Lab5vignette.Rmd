@@ -78,7 +78,7 @@ data<-c(lundahoj_data,malmobybike_data)
 To retrieve city bike station status information for Malmo:
 ```{r}
 findBusiestStationsFromData(city_data = "malmobybike_data.json", malmobybike)
-#results <- findBusiestStationsFromData(city_data = "malmobybike_data.json", malmobybike")
+#results <- findBusiestStationsFromData(city_data = "malmobybike_data.json", cmalmobybike")
 
 ```
 
