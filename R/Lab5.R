@@ -6,8 +6,8 @@ library(jsonlite)
 #'
 #'@importFrom jsonlite fromJSON
 #'
-#'@description takin the information from city bikes API. With the information we get two
-#'cities and find the least busy and busy stations. Show them to the user.
+#'@description taking the information from city bikes API. With the information we get two
+#'cities and find the least busy and most busy stations. Show them to the user.
 #'
 #'@param city_info The network information for a city.
 #'
@@ -19,81 +19,81 @@ library(jsonlite)
 #'
 #'@return A list containing the busiest and the least busy city bike station details.
 #'
-#'@export
+#'@export fetchCityBikeData
 
 
-city_api_urls <- c(
-  "http://api.citybik.es/v2/networks/lundahoj",
-  "http://api.citybik.es/v2/networks/malmobybike"
-)
+library(httr)
+library(jsonlite)
 
-city_results <- list()
 
-for (api_url in city_api_urls) {
-  # Fetch data from the API
-  response <- GET(api_url)
-  api_data <- content(response, "text")
 
-  # Save the bike data to a JSON file
-  city_id <- basename(api_url)  # Extract the city ID from the URL
-  writeLines(api_data, paste0(city_id, "_data.json"))
 
-  findBusiestStationsFromData <- function(city_data, city_id) {
-    city_info <- jsonlite::fromJSON(city_data)
+fetchCityBikeData <- function(api_urls=c("http://api.citybik.es/v2/networks/lundahoj",
+                                         "http://api.citybik.es/v2/networks/malmobybike"
+)) {
+  # List of City Bike API URLs for two cities
 
-    stations <- city_info$network$stations
-    stations_sorted <- stations[order(-stations$free_bikes), ]
-    busiest_station <- stations_sorted[1, ]
-    least_busy_station <- stations_sorted[nrow(stations_sorted), ]
+  city_results <- list()
 
-    # Check if free_bikes is a positive integer
-    if (!is.integer(busiest_station$free_bikes) || busiest_station$free_bikes <= 0) {
-      busiest_station$free_bikes <- 0
+  for (api_url in api_urls) {
+    # Fetch data from the API
+    response <- GET(api_url)
+    api_data <- content(response, "text")
+
+    # Save the bike data to a JSON file
+    city_id <- basename(api_url)  # Extract the city ID from the URL
+    writeLines(api_data, paste0(city_id, "_data.json"))
+
+    city_data <- fromJSON(api_data)
+
+    # Find the busiest and least busy stations
+    stations <- city_data$network$stations
+    stations_sorted <- stations[order(-stations$free_bikes),]
+    busiest_station <- stations_sorted[1,]
+    least_busy_station <- stations_sorted[nrow(stations_sorted),]
+
+    # Check and modify station data
+    checkStationData <- function(station) {
+      if (!is.integer(station$free_bikes) || station$free_bikes <= 0) {
+        station$free_bikes <- 0
+      }
+      if (is.null(station$extra$address) ||
+          station$extra$address == "") {
+        station$extra$address <- station$name
+      }
+      return(station)
     }
 
-    # Set the station's name as the address if the address is missing
-    if (is.null(busiest_station$extra$address) || busiest_station$extra$address == "") {
-      busiest_station$extra$address <- busiest_station$name
-    }
+    busiest_station <- checkStationData(busiest_station)
+    least_busy_station <- checkStationData(least_busy_station)
 
-    if (!is.integer(least_busy_station$free_bikes) || least_busy_station$free_bikes <= 0) {
-      least_busy_station$free_bikes <- 0
-    }
+    result <- list(busiest = busiest_station,
+                   least_busy = least_busy_station)
 
-    if (is.null(least_busy_station$extra$address) || least_busy_station$extra$address == "") {
-      least_busy_station$extra$address <- least_busy_station$name
-    }
-
-    return(list(busiest = busiest_station, least_busy = least_busy_station))
+    city_results[[city_id]] <- result
   }
-
-  # Load the data from the JSON file
-  city_data <- readLines(paste0(city_id, "_data.json"))
-
-  # get busy and least busy station
-  results <- findBusiestStationsFromData(city_data, city_id)
-
-  city_results[[city_id]] <- results #put to list
+  return(city_results)
 }
 
-for (city_id in names(city_results)) {
-  results <- city_results[[city_id]]
 
-  cat(paste("City:", city_id, "\n"))
+# Fetch data and get results
+#results <- fetchCityBikeData(city_api_urls)
+
+# Print the results
+#for (city_id in names(results)) {
+#  results_city <- results[[city_id]]
+
+#  cat(paste("City:", city_id, "\n"))
 
   # Print Busiest Station Details
-  cat("Busiest Station Details:\n")
-  cat("Name: ", results$busiest$name, "\n")
-  cat("Address: ", results$busiest$extra$address, "\n")
-  cat("Free Bikes: ", results$busiest$free_bikes, "\n")
+#  cat("Busiest Station Details:\n")
+#  cat("Name: ", results_city$busiest$name, "\n")
+#  cat("Address: ", results_city$busiest$extra$address, "\n")
+#  cat("Free Bikes: ", results_city$busiest$free_bikes, "\n")
 
   # Print Least Busy Station Details
-  cat("Least Busy Station Details:\n")
-  cat("Name: ", results$least_busy$name, "\n")
-  cat("Address: ", results$least_busy$extra$address, "\n")
-  cat("Free Bikes: ", results$least_busy$free_bikes, "\n")
-}
-
-
-
-
+#  cat("Least Busy Station Details:\n")
+#  cat("Name: ", results_city$least_busy$name, "\n")
+#  cat("Address: ", results_city$least_busy$extra$address, "\n")
+#  cat("Free Bikes: ", results_city$least_busy$free_bikes, "\n")
+#}
