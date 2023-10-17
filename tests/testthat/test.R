@@ -13,7 +13,7 @@ test_that("Checking the busiest and least busy stations works correctly", {
     }
   }'
 
-  result <- findBusiestStationsFromData(sample_city_data)
+  result <- fetchCityBikeData(sample_city_data)
 
   # Tests for the busiest station
   expect_equal(result$busiest$name, "Station C")
