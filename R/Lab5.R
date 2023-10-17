@@ -43,7 +43,7 @@ fetchCityBikeData <- function(api_urls=c("http://api.citybik.es/v2/networks/lund
 
     # Find the busiest and least busy stations
     stations <- city_data$network$stations
-    stations_sorted <- stations[order(-stations$free_bikes),]
+    stations_sorted <- stations[order(-stations$free_bikes),] #sort station based on freebike number
     busiest_station <- stations_sorted[1,]
     least_busy_station <- stations_sorted[nrow(stations_sorted),]
 
@@ -54,7 +54,7 @@ fetchCityBikeData <- function(api_urls=c("http://api.citybik.es/v2/networks/lund
       }
       if (is.null(station$extra$address) ||
           station$extra$address == "") {
-        station$extra$address <- station$name
+        station$extra$address <- station$name # if address is empty put name as the address
       }
       return(station)
     }
