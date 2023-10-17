@@ -1,33 +1,43 @@
 library(testthat)
+library(httr)
+library(jsonlite)
 
+# Assuming the fetchCityBikeData function is already sourced
 
-test_that("Checking the busiest and least busy stations works correctly", {
-  sample_city_data <- '{
+test_that("Test fetching city bike data", {
+
+  # Mock API response
+  api_response <- '
+  {
     "network": {
       "stations": [
-        {"name": "Station A", "free_bikes": 10, "empty_slots": 5, "address": "Address a"},
-        {"name": "Station B", "free_bikes": 5, "empty_slots": 10, "address": "Address b"},
-        {"name": "Station C", "free_bikes": 20, "empty_slots": 2, "address": "Address c"},
-        {"name": "Station D", "free_bikes": 15, "empty_slots": 7, "address": "Address d"}
+        {"name": "Station A", "free_bikes": 3, "extra": {"address": "Address A"}},
+        {"name": "Station B", "free_bikes": 5, "extra": {"address": "Address B"}},
+        {"name": "Station C", "free_bikes": 1, "extra": {"address": ""}}
       ]
     }
   }'
 
-  result <- fetchCityBikeData(sample_city_data)
+  # Mock the GET request and content function
+  with_mock(
+    GET = function(url, ...) {
+      structure(list(url = url, status_code = 200, headers = list('Content-Type' = 'application/json')), class = "response")
+    },
+    content = function(...) {
+      api_response
+    },
+    {
+      results <- fetchCityBikeData(c("http://api.citybik.es/v2/networks/mockcity"))
+      expect_equal(length(results), 1)
+      expect_equal(names(results), "mockcity")
 
-  # Tests for the busiest station
-  expect_equal(result$busiest$name, "Station C")
-  expect_equal(result$busiest$free_bikes, 20)
-  expect_equal(result$busiest$empty_slots, 2)
-  expect_equal(result$busiest$address, "Address c")
-  expect_true(is.numeric(result$busiest$empty_slots) && result$busiest$empty_slots >= 0) #input type check for empty slots
-  expect_true(is.numeric(result$least_busy$free_bikes) && result$busiest$empty_slots >= 0)
-
-
-  # Tests for the least busy station
-  expect_equal(result$least_busy$name, "Station B")
-  expect_equal(result$least_busy$free_bikes, 5)
-  expect_equal(result$least_busy$empty_slots, 10)
-  expect_equal(result$least_busy$address, "Address b")
-
+      # Test the busiest and least busy stations
+      expect_equal(results$mockcity$busiest$name, "Station B")
+      expect_equal(results$mockcity$busiest$free_bikes, 5)
+      expect_equal(results$mockcity$least_busy$name, "Station C")
+      expect_equal(results$mockcity$least_busy$free_bikes, 1)
+      expect_equal(results$mockcity$least_busy$extra$address, "Station C") # Address should be replaced with name
+    }
+  )
 })
+
