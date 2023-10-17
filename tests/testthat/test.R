@@ -1,33 +1,33 @@
 library(testthat)
 
+
 test_that("Checking the busiest and least busy stations works correctly", {
-
-  # Mocking the GET and content functions
-  mock_response <- structure(list(content = function(x, ...) sample_city_data), class = "response")
-
-  with_mock(
-    `httr::GET` = function(url, ...) mock_response,
-    `httr::content` = function(response, ...) response$content(response),
-
-    {
-      result <- fetchCityBikeData(api_urls = c("mock_url"))
-
-      # Adjusting the tests based on the functionality of fetchCityBikeData
-      city_result <- result$mock_url
-
-      # Tests for the busiest station
-      expect_equal(city_result$busiest$name, "Station C")
-      expect_equal(city_result$busiest$free_bikes, 20)
-      expect_equal(city_result$busiest$extra$address, "Address c")
-
-      # Tests for the least busy station
-      expect_equal(city_result$least_busy$name, "Station B")
-      expect_equal(city_result$least_busy$free_bikes, 5)
-      expect_equal(city_result$least_busy$extra$address, "Address b")
-
-      # Additional test conditions
-      expect_true(is.numeric(city_result$busiest$free_bikes) && city_result$busiest$free_bikes >= 0)
-      expect_true(is.numeric(city_result$least_busy$free_bikes) && city_result$least_busy$free_bikes >= 0)
+  sample_city_data <- '{
+    "network": {
+      "stations": [
+        {"name": "Station A", "free_bikes": 10, "empty_slots": 5, "address": "Address a"},
+        {"name": "Station B", "free_bikes": 5, "empty_slots": 10, "address": "Address b"},
+        {"name": "Station C", "free_bikes": 20, "empty_slots": 2, "address": "Address c"},
+        {"name": "Station D", "free_bikes": 15, "empty_slots": 7, "address": "Address d"}
+      ]
     }
-  )
+  }'
+
+  result <- fetchCityBikeData(sample_city_data)
+
+  # Tests for the busiest station
+  expect_equal(result$busiest$name, "Station C")
+  expect_equal(result$busiest$free_bikes, 20)
+  expect_equal(result$busiest$empty_slots, 2)
+  expect_equal(result$busiest$address, "Address c")
+  expect_true(is.numeric(result$busiest$empty_slots) && result$busiest$empty_slots >= 0) #input type check for empty slots
+  expect_true(is.numeric(result$least_busy$free_bikes) && result$busiest$empty_slots >= 0)
+
+
+  # Tests for the least busy station
+  expect_equal(result$least_busy$name, "Station B")
+  expect_equal(result$least_busy$free_bikes, 5)
+  expect_equal(result$least_busy$empty_slots, 10)
+  expect_equal(result$least_busy$address, "Address b")
+
 })
