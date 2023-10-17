@@ -25,6 +25,7 @@ library(httr)
 ```
 
 
+
 #Installation and usage
 To use the package Lab5 , first, make sure you have the required libraries installed.
 
@@ -50,8 +51,9 @@ Install and load the required packages-libraries.
 #library(jsonlite)
 #```
 
-
-
+```{r}
+library("Lab5")
+```
 
 # 
 List of City Bike API URLs for two cities
@@ -60,58 +62,50 @@ city_api_urls <- c(
   "http://api.citybik.es/v2/networks/lundahoj",
   "http://api.citybik.es/v2/networks/malmobybike"
 )
-city_results <- list()
-```
-
-
-
-Reading JSON data from local files
-```{r}
-lundahoj_data <- jsonlite::fromJSON("lundahoj_data.json")
-malmobybike_data <- jsonlite::fromJSON("malmobybike_data.json")
-data<-c(lundahoj_data,malmobybike_data)
-```
-
-
-
-#
-To retrieve city bike station status information for Malmo:
-```{r}
-findBusiestStationsFromData(city_data = "malmobybike_data.json", malmobybike)
-#results <- findBusiestStationsFromData(city_data = "malmobybike_data.json", cmalmobybike")
-
 ```
 
 
 #
-To retrieve city bike station status information for Lund:
+Calling the function provides information about the city bikes
 ```{r}
-findBusiestStationsFromData(city_data = "lundahoj_data.json", lundahoj)
+city_results <- Lab5::fetchCityBikeData(city_api_urls)
 ```
 
 
 ```{r}
-for (city_id in names(city_results)) {
-  results <- city_results[[city_id]]
-
-  cat(paste("City:", city_id, "\n"))
-
-  # Print Busiest Station Details
-  cat("Busiest Station Details:\n")
-  cat("Name: ", results$busiest$name, "\n")
-  cat("Address: ", results$busiest$extra$address, "\n")
-  cat("Free Bikes: ", results$busiest$free_bikes, "\n")
-
-  # Print Least Busy Station Details
-  cat("Least Busy Station Details:\n")
-  cat("Name: ", results$least_busy$name, "\n")
-  cat("Address: ", results$least_busy$extra$address, "\n")
-  cat("Free Bikes: ", results$least_busy$free_bikes, "\n")
-}
+lund_res <- fetchCityBikeData(api_urls = "http://api.citybik.es/v2/networks/lundahoj")
+# Print empty slots of busiest station in Lund
+lund_res$lundahoj$busiest$empty_slots
 ```
+
+
+
+#Reading JSON data from local files
+#```{r}
+#lundahoj_data <- jsonlite::fromJSON("lundahoj_data.json")
+#malmobybike_data <- jsonlite::fromJSON("malmobybike_data.json")
+#data<-c(lundahoj_data,malmobybike_data)
+#```
+
+
+
+#
+#To retrieve city bike station status information for Malmo:
+#```{r}
+#fetchCityBikeData(city_data = "malmobybike_data.json")
+#results <- fetchCityBikeData(city_data)
+#```
+
+
+#
+#To retrieve city bike station status information for Lund:
+#```{r}
+#findBusiestStationsFromData(city_data = "lundahoj_data.json", lundahoj)
+#```
+
+
 
 
 #Shiny App
 There is a shiny app provided in the package in which the user selects a city and then gets automatically information about the most and least busy city bike stations there. The station name , the address of the location and the amount of free bikes available are given.
 It can be opened: shiny::runGitHub('NAZLIBILGIC/lab5', subdir = "ShinyAppBike")
-
