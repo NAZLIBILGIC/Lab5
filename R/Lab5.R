@@ -1,20 +1,18 @@
-library(httr)
-library(jsonlite)
+#library(httr)
+#library(jsonlite)
 
-#'
+#'city_bikes documentation
 #'@importFrom httr GET
 #'
 #'@importFrom jsonlite fromJSON
+#'
 #'
 #'@description taking the information from city bikes API. With the information we get two
 #'cities and find the least busy and busy stations. Show them to the user.
 #'fetchCityBikeData function handling the APIs and fins the busy and least busy station.
 #'
-#'@param city_info The network information for a city.
 #'
-#'@param city_id The city ID's.
-#'
-#'@param city_data Data of the cities with station, free bike and address infornation.
+#'@param api_urls API handle
 #'
 #'
 #'
