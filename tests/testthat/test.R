@@ -2,7 +2,6 @@ library(testthat)
 library(httr)
 library(jsonlite)
 
-# Assuming the fetchCityBikeData function is already sourced
 
 test_that("Test fetching city bike data", {
 
