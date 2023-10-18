@@ -2,9 +2,9 @@
   {
     "network": {
       "stations": [
-        {"name": "Station A", "free_bikes": 3, "extra": {"address": "Address A"}},
-        {"name": "Station B", "free_bikes": 5, "extra": {"address": "Address B"}},
-        {"name": "Station C", "free_bikes": 1, "extra": {"address": ""}}
+        {"name": "Station A", "free_bikes": 3},
+        {"name": "Station B", "free_bikes": 5},
+        {"name": "Station C", "free_bikes": 1}
       ]
     }
   }
